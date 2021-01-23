@@ -21,36 +21,38 @@ function printBoard() {
     console.log('-+-+-')
     console.log(board['1'] + '|' + board['2'] + '|' + board['3'])
 };
-printBoard();
 // Pushing turns:  board["7"] = "j";
 //Detect user input
 
 const readline = require("readline");
-const { isatty } = require("tty");
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
-
 function doTurn() {
-    console.log("doTurn() running");
-    
-    rl.question(`It's your turn. Choose where to go: 1 = bl, 2 = bm, 3 = br, 4 = ml, 5 = m, 6 = mr, 7 = tl, 8 = tm, 9 = tr`), (input => {
-        rl.close();
+    printBoard();
+    console.log("It's your turn. Choose where to go: 1 = bl, 2 = bm, 3 = br, 4 = ml, 5 = m, 6 = mr, 7 = tl, 8 = tm, 9 = tr");
+    rl.question(``, input => {
+        
         // isAcceptableInput
+        console.log("this is right before isAcceptableInput(input)");
         isAcceptableInput(input);
-        printBoard();
+        // doComputerTurn
+        computerTurn();
         // checkIfWinner -- sets gameEnd = true and does return()
         if (count >= 5) {
             playerWins();
         };
+        rl.close();
+        //Repeat
         if (gameEnd !== true) {
+            console.log("I'ts turn "+count+" and about to do doTurn()");
+            doTurn();
             count++
+        } else {
+            console.log("It's turn "+count+" and gameEnd must be true because we stopped");
         };
-        // doComputerTurn
-        computerTurn();
         
-        doTurn();
     });
 };
 
@@ -101,6 +103,7 @@ function playerWins() { // player_character is either 'x' or 'o'
         if(board[number] === ' ') availableBoard.push(number); 
      }
      let computerTurnFinished = availableBoard[Math.floor(availableBoard.length * Math.random())];
+     computerTurnFinished = computerTurnFinished.toString();
      board[computerTurnFinished] = "o";
   }
 
